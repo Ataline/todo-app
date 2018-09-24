@@ -3,14 +3,17 @@ const utils = require('../../common/utils');
 
 const logger = utils.getLogger();
 const services = {};
+let taskSchema;
+let model;
 
-services.initialize = () => {
+services.initialize = (mongoose) => {
   logger.info('Task service', 'initializing service...');
-  taskModel.create();
+  taskSchema = taskModel.createSchema(mongoose);
+  model = taskModel.createModel(mongoose, taskSchema);
 };
 
 services.getTasks = () => {
-  return taskModel.find()
+  return model.find()
         .exec()
         .lean()
         .then((tasks) => {
@@ -23,7 +26,7 @@ services.getTasks = () => {
 };
 
 services.createTask = (data) => {
-  return new taskModel.getModel().create(data, (err, small) => {
+  return model.create(data, (err, small) => {
     if (err)  return Promise.reject(err);
     return Promise.resolve(small);
   });
