@@ -1,9 +1,14 @@
 const apiRouter = require('./api');
 const config = require('../environments/config');
 const utils = require('./common/utils');
+const services = require('./services');
 
 const logger = utils.getLogger();
 const tasksApi = {};
+
+tasksApi.initialize = () => {
+  services.initialize();
+};
 
 tasksApi.startServer = (app) => {
   try {
