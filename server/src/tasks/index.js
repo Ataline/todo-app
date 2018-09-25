@@ -16,7 +16,7 @@ tasksApi.startServer = (app) => {
     utils.setBodyParser(app);
     app.use(apiRouter);
     app.listen(config.PORT, () => {
-      logger.info('Server started on port ' + config.PORT + '...');
+      logger.info('Server started on port ' + config.port + '...');
     });
   } catch(err) {
     logger.error(err);
