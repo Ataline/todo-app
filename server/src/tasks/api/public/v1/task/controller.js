@@ -50,7 +50,7 @@ controller.updateTask = (req, res) => {
     res.status(200).json(updateTask);
   })
   .catch((err) => {
-    res.json(err);
+    res.status(500).json(err);
   });
 };
 
@@ -60,7 +60,7 @@ controller.deleteTask = (req, res) => {
     res.status(202).json({ message: 'task deleted' });
   })
   .catch((err) => {
-    res.json(err);
+    res.status(500).json(err);
   });
 };
 
