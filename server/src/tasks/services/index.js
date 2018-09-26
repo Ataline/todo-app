@@ -10,8 +10,9 @@ services.initialize = () => {
 
   connection.on('open', () => {
     logger.info('Connection established with the database');
-    taskService.initialize(mongoose);
-    taskService.createTask({title: 'test', description: 'not needed', startAt: Date.now(), endAt: new Date()})
+    // taskService.initialize(mongoose);
+    // logger.info('Closing connection to database');
+    // connection.close();
   });
 };
 

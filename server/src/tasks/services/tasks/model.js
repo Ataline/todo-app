@@ -1,23 +1,52 @@
-const createSchema = (mongoose) => {
-  const Schema = mongoose.Schema;
-  return new Schema({
-    title: { type: String, required: true },
-    description: String,
-    startAt: { type: Date, default: Date.now, required: true },
-    endAt: { type: Date, required: true }
-  });
+const mongoose = require('mongoose');
+
+const dayRegEx = /\d{2}\/\d{2}\/\d{4}/g;
+const timeRegEx = /\d{2}:\d{2}:\d{2}/g;
+const DAY_ERROR_MESSAGE = 'Invalid day format. The expected format is dd/mm/yyyy';
+const TIME_ERROR_MESSAGE = 'Invalid time format. The expected format is hh:mm:ss'
+
+const propValidator = (regEx, v) => {
+  return regEx.test(v);
 };
 
-const createModel = (mongoose, schema) => {
-  return mongoose.model('Task', schema);
-};
+const Schema = mongoose.Schema;
+const taskSchema = new Schema({
+  title: { type: String, required: true },
+  description: String,
+  startOn: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => propValidator(dayRegEx, v),
+      message: DAY_ERROR_MESSAGE
+    }
+  },
+  endOn: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => propValidator(dayRegEx, v),
+      message: DAY_ERROR_MESSAGE
+    }
+  },
+  // startAt: {
+  //   type: String,
+  //   required: true,
+  //   validate: {
+  //     validator: (v) => propValidator(timeRegEx, v),
+  //     message: TIME_ERROR_MESSAGE
+  //   }
+  // },
+  endAt: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (v) => propValidator(timeRegEx, v),
+      message: TIME_ERROR_MESSAGE
+    }
+  }
+});
 
-const getModel = (mongoose, schema) => {
-  return mongoose.model('Tasks', schema);
-};
+//taskSchema.path(['startAt', 'endAt']).validate((v) =>  propValidator(dayRegEx, v));
 
-module.exports = {
-  createSchema,
-  createModel,
-  getModel
-};
+module.exports =  mongoose.model('Task', taskSchema);

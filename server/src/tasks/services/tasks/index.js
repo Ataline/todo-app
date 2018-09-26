@@ -1,35 +1,36 @@
-const taskModel = require('./model');
+const TaskModel = require('./model');
 const utils = require('../../common/utils');
 
 const logger = utils.getLogger();
 const services = {};
-let taskSchema;
-let model;
 
-services.initialize = (mongoose) => {
-  logger.info('Task service', 'initializing service...');
-  taskSchema = taskModel.createSchema(mongoose);
-  model = taskModel.createModel(mongoose, taskSchema);
+services.createTask = (data) => {
+  return new TaskModel(data).save();
 };
 
 services.getTasks = () => {
-  return model.find()
-        .exec()
-        .lean()
-        .then((tasks) => {
-          return Promise.resolve(tasks);
-        })
-        .catch((err) => {
-          logger('Task service', err);
-          return Promise.reject(err)
-        });
+  return TaskModel.find().exec();
 };
 
-services.createTask = (data) => {
-  return model.create(data, (err, small) => {
-    if (err)  return Promise.reject(err);
-    return Promise.resolve(small);
-  });
+services.getOneTask = () => {
+  return TaskModel.findById(id).exec();
+};
+
+services.updateTask = (id, data) => {
+  TaskModel.findOne({ _id: id })
+  .then((doc) => {
+    Object.keys(data).forEach(key => {
+      doc[key] = data[key];
+    });
+    return doc.save();
+  })
+  .catch((err) => {
+    return Promise.reject(err);
+  })
+}
+
+services.deleteTask = (id) => {
+
 };
 
 module.exports = services;
